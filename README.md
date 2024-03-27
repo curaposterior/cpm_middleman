@@ -14,8 +14,8 @@
 
 - ### Maksymilian Kubiczek - `Back-end` @ReiZde
 
-- ### Jan Krzanowski - `Team Leader`, `Back-end`, `Deployments` @curaposterior
+- ### Jan Krzanowski - `Team Leader`, `Back-end`, `Devops` @curaposterior
 
-- ### Jarosław Struzik  - `Deployments`, `Full-stack` @jeremi1111111
+- ### Jarosław Struzik  - `Java Developer`, `Full-stack` @jeremi1111111
 
 ---
