@@ -12,10 +12,9 @@
 ---
 
 
-- ### Maksymilian Kubiczek - `Back-end` @ReiZde
+- ### [Maksymilian Kubiczek](https://github.com/MaksKubiczek) - `Back-end`
 
-- ### Jan Krzanowski - `Team Leader`, `Back-end`, `Devops` @curaposterior
+- ### [Jan Krzanowski](https://github.com/curaposterior) - `Team Leader`, `Back-end`, `Devops`
 
-- ### Jarosław Struzik  - `Java Developer`, `Full-stack` @jeremi1111111
-
+- ### [Jarosław Struzik](https://github.com/jeremi1111111)  - `Java Developer`, `Full-stack`
 ---
