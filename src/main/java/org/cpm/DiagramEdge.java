@@ -9,11 +9,19 @@ import javafx.scene.transform.Rotate;
 public class DiagramEdge extends Pane {
     private final static Color primaryColor = Color.BLACK;
     private final static Color criticalColor = Color.YELLOW;
+
+    private DiagramNode node1;
+    private DiagramNode node2;
+
     public DiagramEdge(DiagramNode node1, DiagramNode node2) {
+        this.node1 = node1;
+        this.node2 = node2;
+
         double distanceX = node2.getLayoutX() - node1.getLayoutX();
         double distanceY = node2.getLayoutY() - node1.getLayoutY();
         double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
         double angle = Math.toDegrees(Math.atan(distanceY / distanceX));
+        angle += distanceX < 0 ? 180 : 0;
         setLayoutX(node1.getLayoutX());
         setLayoutY(node1.getLayoutY());
 
@@ -38,5 +46,21 @@ public class DiagramEdge extends Pane {
 
         getChildren().addAll(line, arrowHead);
         getTransforms().add(new Rotate(angle));
+    }
+
+    public DiagramNode getNode1() {
+        return node1;
+    }
+
+    public DiagramNode getNode2() {
+        return node2;
+    }
+
+    public DiagramNode getOther(DiagramNode node) {
+        if (node.equals(node1))
+            return node2;
+        if (node.equals(node2))
+            return node1;
+        return node;
     }
 }
