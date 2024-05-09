@@ -1,21 +1,23 @@
 package org.graph;
 
+import java.util.Objects;
+
 public class GraphNode {
     private int earliestOccurrence;
     private int latestOccurrence;
     private String name;
-    private int id;
 
-    public GraphNode(String name, int id){
-        this.name = name;
-        this.id = id;
-    }
 
-    public GraphNode(String name, int id, int earliestOccurrence, int latestOccurrence){
+    public GraphNode(String name, int earliestOccurrence, int latestOccurrence){
         this.name = name;
-        this.id = id;
         this.earliestOccurrence = earliestOccurrence;
         this.latestOccurrence = latestOccurrence;
+    }
+
+    public GraphNode(String name) {
+        this.name = name;
+        this.earliestOccurrence = 0;
+        this.latestOccurrence = 0;
     }
 
     public String getName() {
@@ -43,16 +45,23 @@ public class GraphNode {
     }
 
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int calculateTimeSupply(GraphNode node){
         return node.getLatestOccurrence()-node.getEarliestOccurrence();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null || getClass() != obj.getClass())
+            return false;
+        GraphNode other = (GraphNode) obj;
+        return Objects.equals(name, other.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name);
     }
 
     @Override
