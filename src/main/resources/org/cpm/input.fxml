@@ -12,8 +12,8 @@
     <children>
         <HBox prefHeight="100.0" prefWidth="200.0">
             <children>
-                <Button fx:id="readFromFileButton" mnemonicParsing="false" text="Read From file" />
-                <Button fx:id="saveToFileButton" mnemonicParsing="false" text="Save to File">
+                <Button fx:id="readFromFileButton" mnemonicParsing="false" onAction="#readFromFile" text="Read From file" />
+                <Button fx:id="saveToFileButton" mnemonicParsing="false" onAction="#saveToFile" text="Save to File">
                     <HBox.margin>
                         <Insets left="20.0" />
                     </HBox.margin>
@@ -34,26 +34,26 @@
         <HBox prefHeight="40.0" prefWidth="200.0" spacing="10">
             <children>
                 <TextField fx:id="activityNameTextField" promptText="Nazwa czynności">
-               <HBox.margin>
-                  <Insets left="20.0" top="10.0" />
-               </HBox.margin></TextField>
+                    <HBox.margin>
+                        <Insets left="20.0" top="10.0" />
+                    </HBox.margin></TextField>
                 <TextField fx:id="durationTextField" promptText="Czas trwania">
-               <HBox.margin>
-                  <Insets top="10.0" />
-               </HBox.margin></TextField>
+                    <HBox.margin>
+                        <Insets top="10.0" />
+                    </HBox.margin></TextField>
                 <TextField fx:id="eventSequenceTextField" promptText="Zdarzenie początkowe">
-               <HBox.margin>
-                  <Insets top="10.0" />
-               </HBox.margin></TextField>
-            <TextField fx:id="eventSequenceTextField1" promptText="Zdarzenie końcowe">
-               <HBox.margin>
-                  <Insets top="10.0" />
-               </HBox.margin>
-            </TextField>
+                    <HBox.margin>
+                        <Insets top="10.0" />
+                    </HBox.margin></TextField>
+                <TextField fx:id="eventSequenceTextField1" promptText="Zdarzenie końcowe">
+                    <HBox.margin>
+                        <Insets top="10.0" />
+                    </HBox.margin>
+                </TextField>
                 <Button fx:id="addRecordButton" mnemonicParsing="false" onAction="#addRecord" text="Add Record">
-               <HBox.margin>
-                  <Insets top="10.0" />
-               </HBox.margin></Button>
+                    <HBox.margin>
+                        <Insets top="10.0" />
+                    </HBox.margin></Button>
             </children>
         </HBox>
     </children>
