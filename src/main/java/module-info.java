@@ -5,4 +5,5 @@ module org.cpm {
 
     opens org.cpm to javafx.fxml;
     exports org.cpm;
+    exports org.graph;
 }
