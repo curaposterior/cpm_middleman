@@ -10,7 +10,6 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
-import org.graph.GraphNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -96,15 +95,11 @@ public class CPMController {
         clip.setArcHeight(20);
         clip.setArcWidth(20);
 
-        GraphNode gNode1 = new GraphNode("A", 10, 30);
-        GraphNode gNode2 = new GraphNode("B", 10, 40);
-        GraphNode gNode3 = new GraphNode("C", 10, 50);
-
-        DiagramNode node1 = new DiagramNode(gNode1);
+        DiagramNode node1 = new DiagramNode(null);
         node1.setCenter(200, 375);
-        DiagramNode node2 = new DiagramNode(gNode2);
+        DiagramNode node2 = new DiagramNode(null);
         node2.setCenter(400, 200);
-        DiagramNode node3 = new DiagramNode(gNode3);
+        DiagramNode node3 = new DiagramNode(null);
         node3.setCenter(400, 400);
 
         DiagramEdge edge1 = new DiagramEdge(node1, node2);
