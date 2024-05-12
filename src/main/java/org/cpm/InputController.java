@@ -5,17 +5,20 @@ import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.collections.ObservableList;
+import javafx.collections.FXCollections;
+
+import org.graph.Graph;
 import org.graph.GraphEdge;
 import org.graph.GraphNode;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.io.FileWriter;
 import java.io.FileReader;
 import java.io.BufferedReader;
-
-
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class InputController {
 
@@ -55,11 +58,25 @@ public class InputController {
     @FXML
     public Button addRecordButton;
 
-    private List<GraphEdge> graphEdges = new ArrayList<>();
-    private List<GraphNode> graphNodes = new ArrayList<>();
+    private ObservableList<GraphEdge> graphEdges;
+    private ObservableList<GraphNode> graphNodes;
+
+    @FXML
+    private void initialize() {
+        edgeColumn_name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
+        edgeColumn_weight.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getWeight()));
+        edgeColumn_source.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getSource().toString()));
+        edgeColumn_destination.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDestination().toString()));
+
+        graphNodes = FXCollections.observableArrayList();
+        graphEdges = FXCollections.observableArrayList();
+    }
 
     @FXML
     void readFromFile(ActionEvent event) {
+        ObservableList<GraphEdge> readEdges = FXCollections.observableArrayList();
+        ObservableList<GraphNode> readNodes = FXCollections.observableArrayList();
+
 
         try (BufferedReader nodesReader = new BufferedReader(new FileReader("nodes.csv"));
              BufferedReader edgesReader = new BufferedReader(new FileReader("edges.csv"))) {
@@ -71,12 +88,12 @@ public class InputController {
 
             while ((line = nodesReader.readLine()) != null) {
                 String[] parts = line.split(",");
-                String nodeName = parts[0];
-//                int earliestOccurrence = Integer.parseInt(parts[1]);
-//                int latestOccurrence = Integer.parseInt(parts[2]);
-                GraphNode node = new GraphNode(nodeName);
-                if (!graphNodes.contains(node)) {
-                    graphNodes.add(node);
+                String nodeName = parts[0].trim();
+                int earliestOccurrence = Integer.parseInt(parts[1].trim());
+                int latestOccurrence = Integer.parseInt(parts[2].trim());
+                GraphNode node = new GraphNode(nodeName, earliestOccurrence, latestOccurrence);
+                if (!readNodes.contains(node)) {
+                    readNodes.add(node);
                 }
             }
 
@@ -90,17 +107,22 @@ public class InputController {
                 GraphNode sourceNode = new GraphNode(sourceName);
                 GraphNode destinationNode = new GraphNode(destinationName);
                 GraphEdge edge = new GraphEdge(edgeName, sourceNode, destinationNode, weight);
-                if (!graphNodes.contains(sourceNode)) {
-                    graphNodes.add(sourceNode);
+                if (!readNodes.contains(sourceNode)) {
+                    readNodes.add(sourceNode);
                 }
-                if (!graphNodes.contains(destinationNode)) {
-                    graphNodes.add(destinationNode);
+                if (!readNodes.contains(destinationNode)) {
+                    readNodes.add(destinationNode);
                 }
-                if (!graphEdges.contains(edge)) {
-                    graphEdges.add(edge);
+                if (!readEdges.contains(edge)) {
+                    readEdges.add(edge);
                 }
             }
 
+            graphEdges = readEdges;
+            graphNodes = readNodes;
+
+            System.out.println(graphEdges);
+            System.out.println(graphNodes);
 
             refreshTableView();
 
@@ -135,9 +157,6 @@ public class InputController {
             for (GraphNode node : graphNodes) {
                 nodesWriter.write(node.getName() + "," + String.valueOf(node.getEarliestOccurrence()) + "," + String.valueOf(node.getLatestOccurrence()) + "\n");
             }
-
-            // Oddzielenie sekcji nodes i edges
-            nodesWriter.write("\n");
 
             // Zapisywanie do pliku edges.csv
             edgesWriter.write("Name,Source,Destination,Weight\n");
@@ -202,14 +221,23 @@ public class InputController {
         System.out.println(graphNodes);
     }
 
+    public List<GraphEdge> getAdjacentEdges(GraphNode node) {
+        List<GraphEdge> adjacentEdges = new ArrayList<>();
+        for (GraphEdge edge : graphEdges) {
+            if (edge.getSource().equals(node)) {
+                adjacentEdges.add(edge);
+            }
+        }
+        return adjacentEdges;
+    }
+
+
     @FXML
-    private void initialize() {
-        edgeColumn_name.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getName()));
-        edgeColumn_weight.setCellValueFactory(cellData -> new ReadOnlyIntegerWrapper(cellData.getValue().getWeight()));
-        edgeColumn_source.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getSource().toString()));
-        edgeColumn_destination.setCellValueFactory(cellData -> new ReadOnlyStringWrapper(cellData.getValue().getDestination().toString()));
+    void buildGraph(ActionEvent event){
 
     }
+
+
 
 
 }
