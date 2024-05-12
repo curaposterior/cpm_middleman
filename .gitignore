@@ -26,3 +26,5 @@ replay_pid*
 /.idea/
 /mvnw
 /mvnw.cmd
+*.csv
+target

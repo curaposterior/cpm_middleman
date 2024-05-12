@@ -11,7 +11,7 @@ import java.io.IOException;
 public class CPMApplication extends Application {
     @Override
     public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(CPMApplication.class.getResource("cpm.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(CPMApplication.class.getResource("input.fxml"));
         Parent root = fxmlLoader.load();
         Scene scene = new Scene(root);
         stage.setTitle("CPM");
