@@ -89,9 +89,31 @@ public class CPMController {
             }
         });
         diagramPane.setOnMouseReleased(mouseEvent -> {
-            if (!mouseEvent.isPrimaryButtonDown())
+            if (!mouseEvent.isPrimaryButtonDown()){
+//              List<DiagramNode> otherNodes = new ArrayList<>();
+//                if (movedObject instanceof DiagramNode node) {
+//
+//                    for (DiagramEdge edge : node.getEdges()) {
+//                        DiagramNode other = edge.getOther(node);
+//                        if (other == node) continue;
+//                        otherNodes.add(other);
+//                        other.removeEdge(edge);
+//                        contents.getChildren().remove(edge);
+//                    }
+//                    List<DiagramEdge> newEdges = new ArrayList<>();
+//                    for (DiagramNode other : otherNodes) {
+//                        DiagramEdge edge = new DiagramEdge(node, other);
+//                        newEdges.add(edge);
+//                        other.addEdge(edge);
+//                        contents.getChildren().add(edge);
+//                    }
+//                    node.setEdges(newEdges);
+//                }
+            }
                 movedObject = null;
         });
+
+
         Rectangle clip = new Rectangle(1000, 750);
         clip.setArcHeight(20);
         clip.setArcWidth(20);
