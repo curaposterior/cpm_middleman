@@ -10,12 +10,12 @@ public class DiagramEdge extends Pane {
     private final static Color primaryColor = Color.BLACK;
     private final static Color criticalColor = Color.YELLOW;
 
-    private DiagramNode source;
-    private DiagramNode destination;
+    private DiagramNode node1;
+    private DiagramNode node2;
 
     public DiagramEdge(DiagramNode node1, DiagramNode node2) {
-        this.source = node1;
-        this.destination = node2;
+        this.node1 = node1;
+        this.node2 = node2;
 
         double distanceX = node2.getLayoutX() - node1.getLayoutX();
         double distanceY = node2.getLayoutY() - node1.getLayoutY();
@@ -49,18 +49,18 @@ public class DiagramEdge extends Pane {
     }
 
     public DiagramNode getNode1() {
-        return source;
+        return node1;
     }
 
     public DiagramNode getNode2() {
-        return destination;
+        return node2;
     }
 
     public DiagramNode getOther(DiagramNode node) {
-        if (node.equals(source))
-            return destination;
-        if (node.equals(destination))
-            return source;
+        if (node.equals(node1))
+            return node2;
+        if (node.equals(node2))
+            return node1;
         return node;
     }
 }
