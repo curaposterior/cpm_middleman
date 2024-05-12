@@ -4,12 +4,17 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Graph {
-    private ArrayList<GraphNode> nodes;
-    private ArrayList<GraphEdge> edges;
+    private List<GraphNode> nodes;
+    private List<GraphEdge> edges;
 
     public Graph() {
         nodes = new ArrayList<>();
         edges = new ArrayList<>();
+    }
+
+    public Graph(List<GraphNode> nodes, List<GraphEdge> edges) {
+        this.nodes = nodes;
+        this.edges = edges;
     }
 
     public void addNode(GraphNode node) {
@@ -38,46 +43,30 @@ public class Graph {
         return adjacentEdges;
     }
 
-    public List<List<GraphNode>> findAllShortestPaths(GraphNode start, GraphNode end) {
-        List<List<GraphNode>> allShortestPaths = new ArrayList<>();
-        List<GraphNode> shortestPath = new ArrayList<>();
-        findShortestPaths(start, end, shortestPath, allShortestPaths);
-        return allShortestPaths;
+    public List<List<GraphNode>> findLongestPaths(GraphNode start, GraphNode end) {
+        List<List<GraphNode>> longestPaths = new ArrayList<>();
+        List<GraphNode> currentPath = new ArrayList<>();
+        int[] maxLength = new int[]{0};
+        findLongestPathsDFS(start, end, currentPath, 0, maxLength, longestPaths);
+        return longestPaths;
     }
 
-    private void findShortestPaths(GraphNode current, GraphNode end, List<GraphNode> path, List<List<GraphNode>> allPaths) {
-        path.add(current);
-        if (current.equals(end)) {
-            allPaths.add(new ArrayList<>(path));
+    private void findLongestPathsDFS(GraphNode current, GraphNode end, List<GraphNode> currentPath, int currentLength, int[] maxLength, List<List<GraphNode>> longestPaths) {
+        currentPath.add(current);
+        if (current.equals(end) && currentLength >= maxLength[0]) {
+            if (currentLength > maxLength[0]) {
+                maxLength[0] = currentLength;
+                longestPaths.clear();
+            }
+            longestPaths.add(new ArrayList<>(currentPath));
         } else {
             for (GraphEdge edge : getAdjacentEdges(current)) {
-                if (!path.contains(edge.getDestination())) {
-                    findShortestPaths(edge.getDestination(), end, path, allPaths);
+                if (!currentPath.contains(edge.getDestination())) {
+                    findLongestPathsDFS(edge.getDestination(), end, currentPath, currentLength + edge.getWeight(), maxLength, longestPaths);
                 }
             }
         }
-        path.remove(path.size() - 1);
-    }
-
-    public List<List<GraphEdge>> findAllShortestEdges(GraphNode start, GraphNode end) {
-        List<List<GraphEdge>> allShortestPaths = new ArrayList<>();
-        List<GraphEdge> shortestPath = new ArrayList<>();
-        findShortestEdges(start, end, shortestPath, allShortestPaths);
-        return allShortestPaths;
-    }
-
-    private void findShortestEdges(GraphNode current, GraphNode end, List<GraphEdge> path, List<List<GraphEdge>> allPaths) {
-        for (GraphEdge edge : getAdjacentEdges(current)) {
-            if (!path.contains(edge)) {
-                List<GraphEdge> newPath = new ArrayList<>(path);
-                newPath.add(edge);
-                if (edge.getDestination().equals(end)) {
-                    allPaths.add(newPath);
-                } else {
-                    findShortestEdges(edge.getDestination(), end, newPath, allPaths);
-                }
-            }
-        }
+        currentPath.remove(current);
     }
 
     public Graph buildGraph(ArrayList<GraphNode> nodes, ArrayList<GraphEdge> edges){
@@ -90,6 +79,4 @@ public class Graph {
         }
         return graph;
     }
-
-
 }

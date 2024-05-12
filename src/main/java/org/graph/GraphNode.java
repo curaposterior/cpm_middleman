@@ -45,8 +45,8 @@ public class GraphNode {
     }
 
 
-    public int calculateTimeSupply(GraphNode node){
-        return node.getLatestOccurrence()-node.getEarliestOccurrence();
+    public int calculateTimeSupply(){
+        return this.getLatestOccurrence()-this.getEarliestOccurrence();
     }
 
     @Override
