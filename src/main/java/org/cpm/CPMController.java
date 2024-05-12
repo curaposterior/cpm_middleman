@@ -1,6 +1,5 @@
 package org.cpm;
 
-
 import javafx.fxml.FXML;
 import javafx.geometry.Point2D;
 import javafx.scene.Group;
@@ -10,6 +9,8 @@ import javafx.scene.shape.Rectangle;
 import javafx.scene.transform.Scale;
 import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
+import org.graph.GraphEdge;
+import org.graph.GraphNode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,12 @@ public class CPMController {
 
     @FXML
     public void initialize() {
+        InputController inputController = (InputController) CPMApplication.getController();
+        List<GraphNode> graphNodes = inputController.getGraphNodes();
+        List<GraphEdge> graphEdges = inputController.getGraphEdges();
+        inputController = null;
+        System.gc();
+
         lastTransformPoint = null;
         contents.getTransforms().addAll(new Scale());
 
@@ -70,20 +77,10 @@ public class CPMController {
                     Point2D local = contents.parentToLocal(mouseEvent.getX(), mouseEvent.getY());
                     movedObject.setLayoutX(local.getX() - moveOffset.getX());
                     movedObject.setLayoutY(local.getY() - moveOffset.getY());
-                    List<DiagramEdge> newEdges = new ArrayList<>();
-                    if (movedObject instanceof DiagramNode node) {
-                        for (DiagramEdge edge : node.getEdges()) {
-                            DiagramNode other = edge.getOther(node);
-                            if (other == node) continue;
-                            DiagramEdge replacement = new DiagramEdge(edge.getNode1(), edge.getNode2());
-                            newEdges.add(replacement);
-                            other.removeEdge(edge);
-                            other.addEdge(replacement);
-                            contents.getChildren().remove(edge);
-                        }
-                        node.setEdges(newEdges);
-                        contents.getChildren().addAll(newEdges);
-                    }
+
+                    if (movedObject instanceof DiagramNode)
+                        for (DiagramEdge edge : ((DiagramNode) movedObject).getEdges())
+                            edge.render();
                 }
             }
         });
@@ -91,26 +88,39 @@ public class CPMController {
             if (!mouseEvent.isPrimaryButtonDown())
                 movedObject = null;
         });
+
         Rectangle clip = new Rectangle(1000, 750);
         clip.setArcHeight(20);
         clip.setArcWidth(20);
-
-        DiagramNode node1 = new DiagramNode(null);
-        node1.setCenter(200, 375);
-        DiagramNode node2 = new DiagramNode(null);
-        node2.setCenter(400, 200);
-        DiagramNode node3 = new DiagramNode(null);
-        node3.setCenter(400, 400);
-
-        DiagramEdge edge1 = new DiagramEdge(node1, node2);
-        node1.addEdge(edge1);
-        node2.addEdge(edge1);
-
-        DiagramEdge edge2 = new DiagramEdge(node1, node3);
-        node1.addEdge(edge2);
-        node3.addEdge(edge2);
-
         diagramPane.setClip(clip);
-        contents.getChildren().addAll(node1, node2, node3, edge1, edge2);
+
+        List<DiagramNode> diagramNodes = new ArrayList<>();
+        List<DiagramEdge> diagramEdges = new ArrayList<>();
+
+        DiagramBuilder.build(graphNodes, graphEdges, diagramNodes, diagramEdges, new Point2D(200, 375));
+
+        contents.getChildren().addAll(diagramNodes);
+        contents.getChildren().addAll(diagramEdges);
+        for (DiagramEdge edge : diagramEdges)
+            edge.render();
+
+//        DiagramNode node1 = new DiagramNode(null);
+//        node1.setCenter(200, 375);
+//        DiagramNode node2 = new DiagramNode(null);
+//        node2.setCenter(400, 200);
+//        DiagramNode node3 = new DiagramNode(null);
+//        node3.setCenter(400, 400);
+//
+//        DiagramEdge edge1 = new DiagramEdge(node1, node2);
+//        node1.addEdge(edge1);
+//        node2.addEdge(edge1);
+//        edge1.render();
+//
+//        DiagramEdge edge2 = new DiagramEdge(node1, node3);
+//        node1.addEdge(edge2);
+//        node3.addEdge(edge2);
+//        edge2.render();
+
+//        contents.getChildren().addAll(node1, node2, node3, edge1, edge2);
     }
 }
