@@ -23,8 +23,9 @@ public class DiagramNode extends Pane {
 
     private final Label name;
     private final Label earlyStart;
-    private final Label lateFinish;
-    private final Label mean;
+    private final Label earlyFinish;
+    private final Label timeMargin;
+    private boolean toggleVisited;
 
     private List<DiagramEdge> edges;
 
@@ -32,8 +33,9 @@ public class DiagramNode extends Pane {
         if (node == null)
             node = new GraphNode("");
 
-        this.radius = DEFAULT_RADIUS;
+        this.toggleVisited = false;
 
+        this.radius = DEFAULT_RADIUS;
         background = new Circle(radius, PRIMARY_COLOR);
         background.setStroke(Color.BLACK);
         background.setStrokeWidth(1);
@@ -61,19 +63,19 @@ public class DiagramNode extends Pane {
         earlyStart.setAlignment(Pos.CENTER);
 
         int lf = node.getLatestOccurrence();
-        this.lateFinish = new Label(String.valueOf(lf));
-        lateFinish.setLayoutY(-radius / 2);
-        lateFinish.setMinHeight(radius);
-        lateFinish.setMinWidth(radius);
-        lateFinish.setAlignment(Pos.CENTER);
+        this.earlyFinish = new Label(String.valueOf(lf));
+        earlyFinish.setLayoutY(-radius / 2);
+        earlyFinish.setMinHeight(radius);
+        earlyFinish.setMinWidth(radius);
+        earlyFinish.setAlignment(Pos.CENTER);
 
-        this.mean = new Label(String.valueOf(lf - es));
-        mean.setMinHeight(radius);
-        mean.setLayoutX(-radius / 2);
-        mean.setMinWidth(radius);
-        mean.setAlignment(Pos.CENTER);
+        this.timeMargin = new Label(String.valueOf(lf - es));
+        timeMargin.setMinHeight(radius);
+        timeMargin.setLayoutX(-radius / 2);
+        timeMargin.setMinWidth(radius);
+        timeMargin.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(background, line1, line2, name, earlyStart, lateFinish, mean);
+        getChildren().addAll(background, line1, line2, name, earlyStart, earlyFinish, timeMargin);
 
         edges = new ArrayList<>();
     }
@@ -114,5 +116,37 @@ public class DiagramNode extends Pane {
 
     public List<DiagramEdge> getEdges() {
         return edges;
+    }
+
+    public void setEarlyStart(int earlyStart) {
+        this.earlyStart.setText(String.valueOf(earlyStart));
+    }
+
+    public void setEarlyFinish(int earlyFinish) {
+        this.earlyFinish.setText(String.valueOf(earlyFinish));
+    }
+
+    public void setTimeMargin(int timeMargin) {
+        this.timeMargin.setText(String.valueOf(timeMargin));
+    }
+
+    public Integer getEarlyStart() {
+        return Integer.valueOf(earlyStart.getText());
+    }
+
+    public Integer getEarlyFinish() {
+        return Integer.valueOf(earlyFinish.getText());
+    }
+
+    public Integer getTimeMargin() {
+        return Integer.valueOf(timeMargin.getText());
+    }
+
+    public boolean isToggleVisited() {
+        return toggleVisited;
+    }
+
+    public void setToggleVisited(boolean toggleVisited) {
+        this.toggleVisited = toggleVisited;
     }
 }

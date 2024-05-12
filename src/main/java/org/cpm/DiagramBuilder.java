@@ -27,12 +27,76 @@ public class DiagramBuilder {
                     destination = node;
             }
 
-            DiagramEdge diagramEdge = new DiagramEdge(source, destination, edge.getName(), edge.getWeight());
             assert source != null;
-            source.addEdge(diagramEdge);
             assert destination != null;
+
+            int currentWeight = source.getEarlyStart() + edge.getWeight();
+            if (currentWeight > destination.getEarlyStart()) {
+                destination.setEarlyStart(currentWeight);
+            }
+
+            DiagramEdge diagramEdge = new DiagramEdge(source, destination, edge.getName(), edge.getWeight());
+            source.addEdge(diagramEdge);
             destination.addEdge(diagramEdge);
             diagramEdges.add(diagramEdge);
+        }
+
+        for (GraphEdge edge: graphEdges.reversed()) {
+            DiagramNode source = null;
+            DiagramNode destination = null;
+
+            for (DiagramNode node : diagramNodes) {
+                if (source != null && destination != null)
+                    break;
+                if (node.getName().equals(edge.getSource().getName()))
+                    source = node;
+                else if (node.getName().equals(edge.getDestination().getName()))
+                    destination = node;
+            }
+
+            assert source != null;
+            assert destination != null;
+
+            if (edge == graphEdges.getLast()) {
+                destination.setEarlyFinish(destination.getEarlyStart());
+            }
+            if (edge == graphEdges.getFirst()) {
+                source.setEarlyFinish(0);
+            }
+            if (source.getEarlyFinish() == 0) {
+                source.setEarlyFinish(destination.getEarlyFinish());
+            }
+            if (destination.getEarlyFinish() - edge.getWeight() < source.getEarlyFinish()) {
+                source.setEarlyFinish(destination.getEarlyFinish() - edge.getWeight());
+            }
+        }
+
+        for (GraphEdge edge: graphEdges) {
+            DiagramNode source = null;
+            DiagramNode destination = null;
+
+            for (DiagramNode node : diagramNodes) {
+                if (source != null && destination != null)
+                    break;
+                if (node.getName().equals(edge.getSource().getName()))
+                    source = node;
+                else if (node.getName().equals(edge.getDestination().getName()))
+                    destination = node;
+            }
+
+            assert source != null;
+            assert destination != null;
+
+            source.setTimeMargin(source.getEarlyFinish()-source.getEarlyStart());
+            destination.setTimeMargin(destination.getEarlyFinish()-destination.getEarlyStart());
+            if (source.getTimeMargin().equals(0) && !source.isToggleVisited()) {
+                source.toggle();
+                source.setToggleVisited(true);
+            }
+            if (destination.getTimeMargin().equals(0) && !destination.isToggleVisited()) {
+                destination.toggle();
+                destination.setToggleVisited(true);
+            }
         }
 
         DiagramNode startNode = diagramNodes.getFirst();
