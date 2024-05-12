@@ -8,6 +8,7 @@ import javafx.scene.control.*;
 import javafx.collections.ObservableList;
 import javafx.collections.FXCollections;
 
+import javafx.stage.Stage;
 import org.graph.Graph;
 import org.graph.GraphEdge;
 import org.graph.GraphNode;
@@ -231,13 +232,17 @@ public class InputController {
         return adjacentEdges;
     }
 
-
     @FXML
-    void buildGraph(ActionEvent event){
-
+    void buildGraph(ActionEvent event) throws IOException {
+        CPMApplication.load("cpm.fxml", null);
+        ((Stage) tableView.getScene().getWindow()).close();
     }
 
+    public List<GraphEdge> getGraphEdges() {
+        return new ArrayList<>(graphEdges);
+    }
 
-
-
+    public List<GraphNode> getGraphNodes() {
+        return new ArrayList<>(graphNodes);
+    }
 }

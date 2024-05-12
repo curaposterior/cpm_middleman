@@ -15,12 +15,13 @@ import java.util.List;
 
 public class DiagramNode extends Pane {
     private final static Color PRIMARY_COLOR = Color.RED.deriveColor(0, 1, 1, 0.2);
-    private final static Color CRITICAL_COLOR = Color.YELLOW.deriveColor(0, 1, 1, 0.2);
+    private final static Color CRITICAL_COLOR = Color.GOLD.deriveColor(0, 1, 1, 0.4);
     private final static double DEFAULT_RADIUS = 50;
 
     private final double radius;
+    private Circle background;
 
-    private final Label id;
+    private final Label name;
     private final Label earlyStart;
     private final Label lateFinish;
     private final Label mean;
@@ -33,9 +34,9 @@ public class DiagramNode extends Pane {
 
         this.radius = DEFAULT_RADIUS;
 
-        Circle circle = new Circle(radius, PRIMARY_COLOR);
-        circle.setStroke(Color.BLACK);
-        circle.setStrokeWidth(1);
+        background = new Circle(radius, PRIMARY_COLOR);
+        background.setStroke(Color.BLACK);
+        background.setStrokeWidth(1);
 
         Line line1 = new Line(-radius, 0, radius, 0);
         line1.getTransforms().add(new Rotate(45));
@@ -44,12 +45,12 @@ public class DiagramNode extends Pane {
         line2.getTransforms().add(new Rotate(-45));
         line2.setOpacity(0.4);
 
-        this.id = new Label(node.getName());
-        id.setLayoutY(-radius);
-        id.setMinHeight(radius);
-        id.setLayoutX(-radius / 2);
-        id.setMinWidth(radius);
-        id.setAlignment(Pos.CENTER);
+        this.name = new Label(node.getName());
+        name.setLayoutY(-radius);
+        name.setMinHeight(radius);
+        name.setLayoutX(-radius / 2);
+        name.setMinWidth(radius);
+        name.setAlignment(Pos.CENTER);
 
         int es = node.getEarliestOccurrence();
         this.earlyStart = new Label(String.valueOf(es));
@@ -72,7 +73,7 @@ public class DiagramNode extends Pane {
         mean.setMinWidth(radius);
         mean.setAlignment(Pos.CENTER);
 
-        getChildren().addAll(circle, line1, line2, id, earlyStart, lateFinish, mean);
+        getChildren().addAll(background, line1, line2, name, earlyStart, lateFinish, mean);
 
         edges = new ArrayList<>();
     }
@@ -87,13 +88,16 @@ public class DiagramNode extends Pane {
         return contains(point2D.getX(), point2D.getY());
     }
 
+    public void toggle() {
+        background.setFill(background.getFill() == PRIMARY_COLOR ? CRITICAL_COLOR : PRIMARY_COLOR);
+    }
+
     public double getRadius() {
         return radius;
     }
 
-    public void setCenter(double x, double y) {
-        setLayoutX(x);
-        setLayoutY(y);
+    public String getName() {
+        return name.getText();
     }
 
     public void addEdge(DiagramEdge edge) {

@@ -1,5 +1,7 @@
 package org.cpm;
 
+import javafx.geometry.Pos;
+import javafx.scene.control.Label;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
@@ -10,25 +12,34 @@ public class DiagramEdge extends Pane {
     private final static Color primaryColor = Color.BLACK;
     private final static Color criticalColor = Color.YELLOW;
 
-    private DiagramNode node1;
-    private DiagramNode node2;
+    private final DiagramNode source;
+    private final DiagramNode destination;
+    private final String edgeName;
+    private final int weight;
 
-    public DiagramEdge(DiagramNode node1, DiagramNode node2) {
-        this.node1 = node1;
-        this.node2 = node2;
+    public DiagramEdge(DiagramNode source, DiagramNode destination, String edgeName, int weight) {
+        this.source = source;
+        this.destination = destination;
+        this.edgeName = edgeName;
+        this.weight = weight;
+    }
 
-        double distanceX = node2.getLayoutX() - node1.getLayoutX();
-        double distanceY = node2.getLayoutY() - node1.getLayoutY();
+    public void render() {
+        getChildren().clear();
+        getTransforms().clear();
+
+        double distanceX = destination.getLayoutX() - source.getLayoutX();
+        double distanceY = destination.getLayoutY() - source.getLayoutY();
         double distance = Math.sqrt(Math.pow(distanceX, 2) + Math.pow(distanceY, 2));
         double angle = Math.toDegrees(Math.atan(distanceY / distanceX));
         angle += distanceX < 0 ? 180 : 0;
-        setLayoutX(node1.getLayoutX());
-        setLayoutY(node1.getLayoutY());
+        setLayoutX(source.getLayoutX());
+        setLayoutY(source.getLayoutY());
 
-        double x1 = node1.getRadius();
+        double x1 = source.getRadius();
         double y1 = 0;
 
-        double x2 = distance - node2.getRadius();
+        double x2 = distance - destination.getRadius();
         double y2 = 0;
 
         Line line = new Line(x1, y1, x2, y2);
@@ -44,23 +55,30 @@ public class DiagramEdge extends Pane {
         arrowHead.setLayoutY(y2);
         arrowHead.setFill(primaryColor);
 
-        getChildren().addAll(line, arrowHead);
+        Label label = new Label(edgeName + "[" + weight + "]");
+        label.setLayoutX(x1);
+        label.setMinWidth(Math.abs(x2 - x1));
+        label.setLayoutY(-20);
+        label.setMinHeight(10);
+        label.setAlignment(Pos.TOP_CENTER);
+
+        getChildren().addAll(line, arrowHead, label);
         getTransforms().add(new Rotate(angle));
     }
 
-    public DiagramNode getNode1() {
-        return node1;
+    public DiagramNode getSource() {
+        return source;
     }
 
-    public DiagramNode getNode2() {
-        return node2;
+    public DiagramNode getDestination() {
+        return destination;
     }
 
     public DiagramNode getOther(DiagramNode node) {
-        if (node.equals(node1))
-            return node2;
-        if (node.equals(node2))
-            return node1;
+        if (node.equals(source))
+            return destination;
+        if (node.equals(destination))
+            return source;
         return node;
     }
 }
