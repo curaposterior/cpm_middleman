@@ -103,24 +103,5 @@ public class CPMController {
         contents.getChildren().addAll(diagramEdges);
         for (DiagramEdge edge : diagramEdges)
             edge.render();
-
-//        DiagramNode node1 = new DiagramNode(null);
-//        node1.setCenter(200, 375);
-//        DiagramNode node2 = new DiagramNode(null);
-//        node2.setCenter(400, 200);
-//        DiagramNode node3 = new DiagramNode(null);
-//        node3.setCenter(400, 400);
-//
-//        DiagramEdge edge1 = new DiagramEdge(node1, node2);
-//        node1.addEdge(edge1);
-//        node2.addEdge(edge1);
-//        edge1.render();
-//
-//        DiagramEdge edge2 = new DiagramEdge(node1, node3);
-//        node1.addEdge(edge2);
-//        node3.addEdge(edge2);
-//        edge2.render();
-
-//        contents.getChildren().addAll(node1, node2, node3, edge1, edge2);
     }
 }

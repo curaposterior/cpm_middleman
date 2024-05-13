@@ -69,24 +69,6 @@ public class DiagramBuilder {
             if (destination.getEarlyFinish() - edge.getWeight() < source.getEarlyFinish()) {
                 source.setEarlyFinish(destination.getEarlyFinish() - edge.getWeight());
             }
-        }
-
-        for (GraphEdge edge: graphEdges) {
-            DiagramNode source = null;
-            DiagramNode destination = null;
-
-            for (DiagramNode node : diagramNodes) {
-                if (source != null && destination != null)
-                    break;
-                if (node.getName().equals(edge.getSource().getName()))
-                    source = node;
-                else if (node.getName().equals(edge.getDestination().getName()))
-                    destination = node;
-            }
-
-            assert source != null;
-            assert destination != null;
-
             source.setTimeMargin(source.getEarlyFinish()-source.getEarlyStart());
             destination.setTimeMargin(destination.getEarlyFinish()-destination.getEarlyStart());
             if (source.getTimeMargin().equals(0) && !source.isToggleVisited()) {
@@ -98,7 +80,6 @@ public class DiagramBuilder {
                 destination.setToggleVisited(true);
             }
         }
-
         DiagramNode startNode = diagramNodes.getFirst();
 
         List<DiagramNode> currentLevel = new ArrayList<>();
