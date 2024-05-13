@@ -9,19 +9,24 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.transform.Rotate;
 
 public class DiagramEdge extends Pane {
-    private final static Color primaryColor = Color.BLACK;
-    private final static Color criticalColor = Color.YELLOW;
+    private final static Color PRIMARY_COLOR = Color.BLACK;
+    private final static Color CRITICAL_COLOR = Color.YELLOW;
 
     private final DiagramNode source;
     private final DiagramNode destination;
     private final String edgeName;
     private final int weight;
 
+    private Line line;
+    private Polygon arrowHead;
+    private Color currentColor;
+
     public DiagramEdge(DiagramNode source, DiagramNode destination, String edgeName, int weight) {
         this.source = source;
         this.destination = destination;
         this.edgeName = edgeName;
         this.weight = weight;
+        currentColor = PRIMARY_COLOR;
     }
 
     public void render() {
@@ -42,18 +47,18 @@ public class DiagramEdge extends Pane {
         double x2 = distance - destination.getRadius();
         double y2 = 0;
 
-        Line line = new Line(x1, y1, x2, y2);
-        line.setStroke(primaryColor);
+        line = new Line(x1, y1, x2, y2);
+        line.setStroke(currentColor);
 
         double[] vertices = new double[] {
                 0., 0.,
                 -20., 6.,
                 -20., -6.
         };
-        Polygon arrowHead = new Polygon(vertices);
+        arrowHead = new Polygon(vertices);
         arrowHead.setLayoutX(x2);
         arrowHead.setLayoutY(y2);
-        arrowHead.setFill(primaryColor);
+        arrowHead.setFill(currentColor);
 
         Label label = new Label(edgeName + "[" + weight + "]");
         label.setLayoutX(x1);
@@ -64,6 +69,10 @@ public class DiagramEdge extends Pane {
 
         getChildren().addAll(line, arrowHead, label);
         getTransforms().add(new Rotate(angle));
+    }
+
+    public void toggle() {
+        currentColor = currentColor == PRIMARY_COLOR ? CRITICAL_COLOR : PRIMARY_COLOR;
     }
 
     public DiagramNode getSource() {

@@ -1,6 +1,7 @@
 package org.cpm;
 
 import javafx.geometry.Point2D;
+import jdk.jshell.Diag;
 import org.graph.GraphEdge;
 import org.graph.GraphNode;
 
@@ -71,15 +72,16 @@ public class DiagramBuilder {
             }
             source.setTimeMargin(source.getEarlyFinish()-source.getEarlyStart());
             destination.setTimeMargin(destination.getEarlyFinish()-destination.getEarlyStart());
-            if (source.getTimeMargin().equals(0) && !source.isToggleVisited()) {
-                source.toggle();
-                source.setToggleVisited(true);
-            }
-            if (destination.getTimeMargin().equals(0) && !destination.isToggleVisited()) {
-                destination.toggle();
-                destination.setToggleVisited(true);
-            }
+//            if (source.getTimeMargin().equals(0) && !source.isToggleVisited()) {
+//                source.toggle();
+//                source.setToggleVisited(true);
+//            }
+//            if (destination.getTimeMargin().equals(0) && !destination.isToggleVisited()) {
+//                destination.toggle();
+//                destination.setToggleVisited(true);
+//            }
         }
+
         DiagramNode startNode = diagramNodes.getFirst();
 
         List<DiagramNode> currentLevel = new ArrayList<>();
@@ -114,6 +116,7 @@ public class DiagramBuilder {
             currentLevel = nextLevel;
         }
 
+        DiagramNode last = null;
         final double axisY = start.getY();
         double axisX = start.getX();
         for (List<DiagramNode> level : levels) {
@@ -124,6 +127,15 @@ public class DiagramBuilder {
                     y += SPACING * 2;
                     continue;
                 }
+                if (node.getTimeMargin() == 0) {
+                    if (last != null) {
+                        for (DiagramEdge e : last.getEdges())
+                            if (e.getDestination() == node)
+                                e.toggle();
+                        last.toggle();
+                    }
+                    last = node;
+                }
                 node.setLayoutX(axisX);
                 node.setLayoutY(y);
                 y += SPACING * 2;
@@ -131,5 +143,7 @@ public class DiagramBuilder {
 
             axisX += SPACING * 2;
         }
+        assert last != null;
+        last.toggle();
     }
 }
