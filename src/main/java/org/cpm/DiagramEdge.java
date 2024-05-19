@@ -10,7 +10,7 @@ import javafx.scene.transform.Rotate;
 
 public class DiagramEdge extends Pane {
     private final static Color PRIMARY_COLOR = Color.BLACK;
-    private final static Color CRITICAL_COLOR = Color.YELLOW;
+    private final static Color CRITICAL_COLOR = Color.ORANGE;
 
     private final DiagramNode source;
     private final DiagramNode destination;
