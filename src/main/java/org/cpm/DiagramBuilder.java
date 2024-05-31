@@ -1,7 +1,6 @@
 package org.cpm;
 
 import javafx.geometry.Point2D;
-import jdk.jshell.Diag;
 import org.graph.GraphEdge;
 import org.graph.GraphNode;
 
@@ -72,14 +71,6 @@ public class DiagramBuilder {
             }
             source.setTimeMargin(source.getEarlyFinish()-source.getEarlyStart());
             destination.setTimeMargin(destination.getEarlyFinish()-destination.getEarlyStart());
-//            if (source.getTimeMargin().equals(0) && !source.isToggleVisited()) {
-//                source.toggle();
-//                source.setToggleVisited(true);
-//            }
-//            if (destination.getTimeMargin().equals(0) && !destination.isToggleVisited()) {
-//                destination.toggle();
-//                destination.setToggleVisited(true);
-//            }
         }
 
         DiagramNode startNode = diagramNodes.getFirst();
