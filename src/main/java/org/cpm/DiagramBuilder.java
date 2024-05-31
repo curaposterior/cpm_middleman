@@ -1,7 +1,6 @@
 package org.cpm;
 
 import javafx.geometry.Point2D;
-import jdk.jshell.Diag;
 import org.graph.GraphEdge;
 import org.graph.GraphNode;
 
