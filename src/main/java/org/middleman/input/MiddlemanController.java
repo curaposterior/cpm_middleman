@@ -4,12 +4,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -36,6 +33,7 @@ public class MiddlemanController {
     HBox customersInputFields;
     @FXML
     GridPane transportCosts;
+    public static final int nameLengthConstant = 19;
 
     @FXML
     void initialize() {
@@ -141,6 +139,13 @@ public class MiddlemanController {
                     "");
             return;
         }
+        if (name.get().length() > nameLengthConstant) {
+            AlertProducer.alert(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Name is too long",
+                    "");
+            return;
+        }
         if (supply.get().isEmpty()) {
             AlertProducer.alert(Alert.AlertType.INFORMATION,
                     "Information",
@@ -205,6 +210,13 @@ public class MiddlemanController {
             AlertProducer.alert(Alert.AlertType.INFORMATION,
                     "Information",
                     "Input name",
+                    "");
+            return;
+        }
+        if (name.get().length() > nameLengthConstant) {
+            AlertProducer.alert(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Name is too long",
                     "");
             return;
         }
