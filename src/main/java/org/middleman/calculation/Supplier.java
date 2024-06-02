@@ -15,14 +15,14 @@ public class Supplier {
     private final double supply;
     private final double cost;
     private final boolean isFictional;
-    private List<Route> routes;
+    @ToString.Exclude
+    private final List<Route> routes = new ArrayList<>();
 
     public void addRoute(Route route) {
-        if (routes == null)
-            routes = new ArrayList<>();
         routes.add(route);
     }
 
+    @ToString.Include
     public double getCurrentSupply() {
         double val = supply;
         for (var route : routes)

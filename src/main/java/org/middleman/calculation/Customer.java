@@ -15,14 +15,14 @@ public class Customer {
     private final double demand;
     private final double price;
     private final boolean isFictional;
-    private List<Route> routes;
+    @ToString.Exclude
+    private final List<Route> routes = new ArrayList<>();
 
     public void addRoute(Route route) {
-        if (routes == null)
-            routes = new ArrayList<>();
         routes.add(route);
     }
 
+    @ToString.Include
     public double getCurrentDemand() {
         double val = demand;
         for (var route : routes)

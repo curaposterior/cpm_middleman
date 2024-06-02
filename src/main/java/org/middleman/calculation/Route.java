@@ -2,8 +2,10 @@ package org.middleman.calculation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 
 @RequiredArgsConstructor
+@ToString
 public class Route {
     private final Supplier supplier;
     private final Customer customer;
@@ -21,8 +23,15 @@ public class Route {
         totalRevenue = customer.getPrice() - (supplier.getCost() + transportCost);
     }
 
-    @Override
-    public String toString() {
-        return String.valueOf(totalRevenue);
+    public boolean isFull() {
+        return supplier.getCurrentSupply() == 0 || customer.getCurrentDemand() == 0;
+    }
+
+    public void assignUnits() {
+        units = Math.min(supplier.getCurrentSupply(), customer.getCurrentDemand());
+    }
+
+    public boolean isReal() {
+        return !supplier.isFictional() && !customer.isFictional();
     }
 }
