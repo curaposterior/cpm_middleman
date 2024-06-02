@@ -75,6 +75,11 @@ public class MiddlemanController {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(MiddlemanApplication.class.getResource("results.fxml"));
         Scene scene = new Scene(loader.load());
+        stage.setScene(scene);
+        stage.setTitle("Results");
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        stage.show();
         var controller = (ResultsController) loader.getController();
 
         List<Supplier> suppliers = new ArrayList<>();
@@ -83,7 +88,7 @@ public class MiddlemanController {
             supIndexes.put(sup.getGridIndex(), suppliers.size());
             double supply = Double.parseDouble(sup.getSupply());
             double cost = Double.parseDouble(sup.getCost());
-            suppliers.add(new Supplier(sup.getName(), supply, cost));
+            suppliers.add(new Supplier(sup.getName(), supply, cost, false));
         }
 
         List<Customer> customers = new ArrayList<>();
@@ -92,7 +97,7 @@ public class MiddlemanController {
             cusIndexes.put(cus.getGridIndex(), customers.size());
             double demand = Double.parseDouble(cus.getDemand());
             double price = Double.parseDouble(cus.getPrice());
-            customers.add(new Customer(cus.getName(), demand, price));
+            customers.add(new Customer(cus.getName(), demand, price, false));
         }
 
         double[][] costs = new double[suppliers.size() + 1][customers.size() + 1];
@@ -107,16 +112,10 @@ public class MiddlemanController {
         controller.setCustomers(customers);
         controller.setTransportCostsMatrix(costs);
         controller.calculate();
-
-        stage.setScene(scene);
-        stage.setTitle("Results");
-        stage.sizeToScene();
-        stage.centerOnScreen();
-        stage.show();
     }
 
     @FXML
-    void onAddSupplierButtonClick() {
+    void onAddSupplierButtonAction() {
         StringProperty name = null;
         StringProperty supply = null;
         StringProperty cost = null;
@@ -190,7 +189,7 @@ public class MiddlemanController {
 
 
     @FXML
-    void onAddCustomerButtonClick() {
+    void onAddCustomerButtonAction() {
         StringProperty name = null;
         StringProperty demand = null;
         StringProperty price = null;

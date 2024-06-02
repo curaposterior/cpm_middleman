@@ -1,36 +1,32 @@
 package org.middleman.calculation;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+@RequiredArgsConstructor
 @ToString
+@Getter
 public class Customer {
-    private String name;
-    private double demand;
-    private double price;
+    private final String name;
+    private final double demand;
+    private final double price;
+    private final boolean isFictional;
+    private List<Route> routes;
 
-    public String getName() {
-        return name;
+    public void addRoute(Route route) {
+        if (routes == null)
+            routes = new ArrayList<>();
+        routes.add(route);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getDemand() {
-        return demand;
-    }
-
-    public void setDemand(double demand) {
-        this.demand = demand;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
+    public double getCurrentDemand() {
+        double val = demand;
+        for (var route : routes)
+            val -= route.getUnits();
+        return val;
     }
 }

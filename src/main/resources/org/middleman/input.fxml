@@ -35,7 +35,7 @@
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
          </padding>
          <children>
-            <Button minWidth="38.0" mnemonicParsing="false" onMouseClicked="#onAddSupplierButtonClick" text="Add" />
+            <Button minWidth="38.0" mnemonicParsing="false" onAction="#onAddSupplierButtonAction" text="Add" />
          </children>
       </HBox>
       <HBox fx:id="customersInputFields" alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -43,7 +43,7 @@
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
          </padding>
          <children>
-            <Button minWidth="38.0" mnemonicParsing="false" onMouseClicked="#onAddCustomerButtonClick" text="Add" />
+            <Button minWidth="38.0" mnemonicParsing="false" onAction="#onAddCustomerButtonAction" text="Add" />
          </children>
       </HBox>
       <GridPane fx:id="transportCosts" alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="2">

@@ -3,10 +3,7 @@ package org.middleman.calculation;
 import javafx.fxml.FXML;
 import lombok.Setter;
 
-import java.sql.Array;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class ResultsController {
     @Setter
@@ -16,47 +13,49 @@ public class ResultsController {
     @Setter
     private double[][] transportCostsMatrix; // macierz z kosztami transportu
 
-    private double[][] totalRevenueMatrix;
-    private double[][] transportMatrix;
-    private double[][] helperMatrix; // krok 3.
+    private List<Route> routes;
 
-//    private List<List<Double>> totalRevenueMatrix = new ArrayList<>(); // macierz zyskow jednostkowych
-//    private List<List<Double>> transportMatrix = new ArrayList<>();
+//    private double[][] totalRevenueMatrix;
+//    private double[][] transportMatrix;
+//    private double[][] helperMatrix; // krok 3.
 //
-//    private List<List<Double>> helperMatrix = new ArrayList<>();
+////    private List<List<Double>> totalRevenueMatrix = new ArrayList<>(); // macierz zyskow jednostkowych
+////    private List<List<Double>> transportMatrix = new ArrayList<>();
+////
+////    private List<List<Double>> helperMatrix = new ArrayList<>();
+////
+//    private List<Double> supplyList = new ArrayList<>();
+//    private List<Double> supplyListCost = new ArrayList<>();
 //
-    private List<Double> supplyList = new ArrayList<>();
-    private List<Double> supplyListCost = new ArrayList<>();
+//    private List<Double> demandList = new ArrayList<>();
+//    private List<Double> demandListCost = new ArrayList<>();
+//
+//    public static int totalRevenue; // pC - przychody calkowite
+//
+//    // te 4 wartości to wynik
+//    public static int totalProfit; // zC = pC - Kc
+//    public static int totalCost; // Koszt całkowity = KT + KZ
+//    public static int costsOfTransportation; // KT - koszty transportu
+//    public static int purchaseCosts; // KZ - koszty zakupu
+//
+//    // zmienne kryterialne
+//    public int[] alpha;
+//    public int[] beta;
+//    public double supply = 0;
+//    public double demand = 0;
+//
+//    public int numberOfSuppliers;
+//    public int numberOfRecipients;
+//    public int numberOfSuppliersWithFictional;
+//    public int numberOfRecipientsWithFunctional;
+//    public boolean ozt = false;
 
-    private List<Double> demandList = new ArrayList<>();
-    private List<Double> demandListCost = new ArrayList<>();
-
-    public static int totalRevenue; // pC - przychody calkowite
-
-    // te 4 wartości to wynik
-    public static int totalProfit; // zC = pC - Kc
-    public static int totalCost; // Koszt całkowity = KT + KZ
-    public static int costsOfTransportation; // KT - koszty transportu
-    public static int purchaseCosts; // KZ - koszty zakupu
-
-    // zmienne kryterialne
-    public int[] alpha;
-    public int[] beta;
-    public double supply = 0;
-    public double demand = 0;
-
-    public int numberOfSuppliers;
-    public int numberOfRecipients;
-    public int numberOfSuppliersWithFictional;
-    public int numberOfRecipientsWithFunctional;
-    public boolean ozt = false;
     @FXML
     void initialize() {
-
+        routes = new ArrayList<>();
     }
 
     public void calculate() {
-        // TODO: jak ich posortować?
         System.out.println(suppliers);
         System.out.println(customers);
 
@@ -64,55 +63,35 @@ public class ResultsController {
             System.out.println(Arrays.toString(row));
         }
 
-        this.numberOfRecipients = this.customers.size();
-        this.numberOfSuppliers = this.suppliers.size();
-        this.numberOfSuppliersWithFictional = this.numberOfSuppliers + 1;
-        this.numberOfRecipientsWithFunctional = this.numberOfRecipients + 1;
-
-        for (var elem: suppliers) {
-            this.supplyList.add(elem.getSupply());
-            this.supplyListCost.add(elem.getCost());
+        double demand = 0;
+        double supply = 0;
+        for (var customer : customers) {
+            demand += customer.getDemand();
         }
-        for (var elem: customers) {
-            this.demandList.add(elem.getDemand());
-            this.demandListCost.add(elem.getPrice());
-        }
-        for (var row : customers) {
-            demand += row.getDemand();
-        }
-        for (var row : suppliers) {
-            supply += row.getSupply();
-        }
-        if (supply > demand || supply < demand) {
-            this.totalRevenueMatrix = new double[numberOfSuppliers+1][numberOfRecipients+1];
-            this.transportMatrix = new double[numberOfSuppliers+1][numberOfRecipients+1];
-            this.helperMatrix = new double[numberOfSuppliers+1][numberOfRecipients+1];
-            this.ozt = true;
-
-        }
-        else if (supply == demand) {
-            this.totalRevenueMatrix = new double[numberOfSuppliers][numberOfRecipients];
-            this.transportMatrix = new double[numberOfSuppliers][numberOfRecipients];
-            this.helperMatrix = new double[numberOfSuppliers][numberOfRecipients];
+        for (var supplier : suppliers) {
+            supply += supplier.getSupply();
         }
 
-        for (int i = 0; i < this.numberOfSuppliersWithFictional; i++) {
-            for (int j = 0; j < this.numberOfRecipientsWithFunctional; j++) {
-                this.totalRevenueMatrix[i][j] = 0.0;
-                this.helperMatrix[i][j] = Double.NaN;
-                this.transportMatrix[i][j] = 0.0;
+        if (demand != supply) {
+            double val = Math.abs(demand - supply);
+            suppliers.add(new Supplier("SF", val, 0, true));
+            customers.add(new Customer("CF", val, 0, true));
+        }
+
+        for (int i = 0; i < suppliers.size(); i++)
+            for (int j = 0; j < customers.size(); j++) {
+                Supplier supplier = suppliers.get(i);
+                Customer customer = customers.get(j);
+                Route route = new Route(supplier, customer, transportCostsMatrix[i][j]);
+                routes.add(route);
+                supplier.addRoute(route);
+                customer.addRoute(route);
             }
-            System.out.println();
-        }
 
         // TODO: algos - middleman
 
-        // sprawdzenie czy ZZT czy OZT
-        int newNumberOfSuppliers = this.numberOfSuppliers + 1;
-        int newNumberOfCustomers = this.numberOfRecipients + 1;
-
-        this.calculateZyskiCalkowite();
-        this.calculateMaxMatrixElementMethod();
+        calculateTotalRevenues();
+        calculateMaxMatrixElementMethod();
 //        if (supply > demand) {
 //            // OZT
 //            for (int i = 0; i < this.numberOfSuppliers; i++) {
@@ -146,38 +125,22 @@ public class ResultsController {
 
 
     }
-    public void calculateZyskiCalkowite() {
-        for (int i = 0; i < this.numberOfSuppliers; i++) {
-            for (int j = 0; j < this.numberOfRecipients; j++) {
-                totalRevenueMatrix[i][j] = this.demandListCost.get(j) - (this.supplyListCost.get(i) + this.transportCostsMatrix[i][j]);
-                System.out.print(totalRevenueMatrix[i][j] + " ");
-            }
-            System.out.println();
-        }
+
+    public void calculateTotalRevenues() {
+        for (var route : routes)
+            route.calculateTotalRevenue();
     }
 
     public void calculateMaxMatrixElementMethod() {
-        Map<Pair, Double> matrixMap = new HashMap<>();
-        Map<Pair, Double> matrixMapFictional = new HashMap<>();
-        for (int i = 0; i < totalRevenueMatrix.length; i++) {
-            for (int j = 0; j < totalRevenueMatrix[i].length; j++) {
-                if (i == totalRevenueMatrix.length - 1 || j == totalRevenueMatrix[i].length - 1) {
-                    matrixMapFictional.put(new Pair(i, j), totalRevenueMatrix[i][j]);
-                }
-                else {
-                    matrixMap.put(new Pair(i, j), totalRevenueMatrix[i][j]);
-                }
+        var routesSorted = routes.stream()
+                .sorted(Comparator.comparingDouble(Route::getTotalRevenue))
+                .toList()
+                .reversed();
+        System.out.println(routesSorted);
 
-
-
-            }
-        }
-        System.out.println("Suplly all: " + this.supply + ", demand all: " + this.demand);
-        System.out.println("Before");
-        System.out.println(this.supplyList.toString());
-        System.out.println(this.demandList.toString());
-        System.out.println("###");
-        while (!matrixMap.isEmpty()) {
+        while (!routesSorted.isEmpty()) {
+            routesSorted = routesSorted.stream()
+                    .filter(route -> route)
             if (this.supplyList.stream().allMatch(num -> num == 0.0) ||
                     this.demandList.stream().allMatch(num -> num == 0.0)) {
                 break;

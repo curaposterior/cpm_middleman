@@ -1,36 +1,32 @@
 package org.middleman.calculation;
 
-import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.ToString;
 
-@AllArgsConstructor
+import java.util.ArrayList;
+import java.util.List;
+
+@RequiredArgsConstructor
 @ToString
+@Getter
 public class Supplier {
-    private String name;
-    private double supply;
-    private double cost;
+    private final String name;
+    private final double supply;
+    private final double cost;
+    private final boolean isFictional;
+    private List<Route> routes;
 
-    public String getName() {
-        return name;
+    public void addRoute(Route route) {
+        if (routes == null)
+            routes = new ArrayList<>();
+        routes.add(route);
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public double getSupply() {
-        return supply;
-    }
-
-    public void setSupply(double supply) {
-        this.supply = supply;
-    }
-
-    public double getCost() {
-        return cost;
-    }
-
-    public void setCost(double cost) {
-        this.cost = cost;
+    public double getCurrentSupply() {
+        double val = supply;
+        for (var route : routes)
+            val -= route.getUnits();
+        return val;
     }
 }
