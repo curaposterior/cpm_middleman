@@ -18,7 +18,7 @@ public class ResultsController {
 
     private double[][] totalRevenueMatrix;
     private double[][] transportMatrix;
-    private double[][] helperMatrix;
+    private double[][] helperMatrix; // krok 3.
 
 //    private List<List<Double>> totalRevenueMatrix = new ArrayList<>(); // macierz zyskow jednostkowych
 //    private List<List<Double>> transportMatrix = new ArrayList<>();
@@ -173,11 +173,6 @@ public class ResultsController {
             }
         }
         System.out.println("Suplly all: " + this.supply + ", demand all: " + this.demand);
-//        this.supplyList.add(0.0);
-//        this.demandList.add(0.0);
-//        this.supplyListCost.add(0.0);
-//        this.demandListCost.add(0.0);
-//        System.out.println(matrixMap);
         System.out.println("Before");
         System.out.println(this.supplyList.toString());
         System.out.println(this.demandList.toString());
@@ -194,12 +189,13 @@ public class ResultsController {
 
             //cielsko sprawdzania
             // supplyList, demandList
-            if (supplyList.get(maxKey.getRow()) == 0.0 ||
+            if (supplyList.get(maxKey.getRow()) == 0.0 &&
                     demandList.get(maxKey.getRow()) == 0.0) {
                 matrixMap.remove(maxKey);
                 System.out.println("Removing key " + maxKey + " " + maxValue);
                 continue;
             }
+
             double tempSupply = supplyList.get(maxKey.getRow());
             double tempDemand = demandList.get(maxKey.getCol());
             double tempSubstraction = 0.0;
@@ -208,51 +204,49 @@ public class ResultsController {
                 this.supplyList.set(maxKey.getRow(), tempSubstraction);
                 this.demandList.set(maxKey.getCol(), 0.0);
                 helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
-                System.out.println("Substracting: " + "(" + maxKey.getRow() + "," + maxKey.getCol() + ") - ");
-                System.out.println(this.supplyList.toString());
-                System.out.println(this.demandList.toString());
             }
             else {
                 tempSubstraction = this.demandList.get(maxKey.getCol()) - tempSupply;
                 this.supplyList.set(maxKey.getRow(), 0.0);
                 this.demandList.set(maxKey.getCol(), tempSubstraction);
                 helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
-
             }
             matrixMap.remove(maxKey);
         }
 
-//        this.supplyList.add(this.demand);
-//        this.demandList.add(this.supply);
-//        this.supplyListCost.add(0.0);
-//        this.demandListCost.add(0.0);
-//        while (!matrixMapFictional.isEmpty()) { // handle fictional
-//            Map.Entry<Pair, Double> maxEntry = Collections.max(matrixMapFictional.entrySet(), Map.Entry.comparingByValue());
-//            Pair maxKey = maxEntry.getKey();
-//            Double maxValue = maxEntry.getValue();
-//
-//            if (supplyList.get(maxKey.getRow()) == 0.0 ||
-//                    demandList.get(maxKey.getRow()) == 0.0) {
-//                matrixMap.remove(maxKey);
-//                continue;
-//            }
-//            double tempSupply = supplyList.get(maxKey.getRow());
-//            double tempDemand = demandList.get(maxKey.getCol());
-//            double tempSubstraction = 0.0;
-//            if (tempSupply >= tempDemand) {
-//                tempSubstraction = this.supplyList.get(maxKey.getRow()) - tempDemand;
-//                this.supplyList.set(maxKey.getRow(), tempSubstraction);
-//                this.demandList.set(maxKey.getCol(), 0.0);
-//                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
-//            }
-//            else {
-//                tempSubstraction = this.demandList.get(maxKey.getCol()) - tempSupply;
-//                this.supplyList.set(maxKey.getRow(), 0.0);
-//                this.demandList.set(maxKey.getCol(), tempSubstraction);
-//                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
-//            }
-//            matrixMap.remove(maxKey);
-//        }
+        this.supplyList.add(this.demand);
+        this.demandList.add(this.supply);
+        this.supplyListCost.add(0.0);
+        this.demandListCost.add(0.0);
+        while (!matrixMapFictional.isEmpty()) { // handle fictional
+            Map.Entry<Pair, Double> maxEntry = Collections.max(matrixMapFictional.entrySet(), Map.Entry.comparingByValue());
+            Pair maxKey = maxEntry.getKey();
+            Double maxValue = maxEntry.getValue();
+
+            if (supplyList.get(maxKey.getRow()) == 0.0 ||
+                    demandList.get(maxKey.getCol()) == 0.0) {
+                matrixMapFictional.remove(maxKey);
+                System.out.println("Removing key " + maxKey + " " + maxValue);
+                continue;
+            }
+
+            double tempSupply = supplyList.get(maxKey.getRow());
+            double tempDemand = demandList.get(maxKey.getCol());
+            double tempSubstraction = 0.0;
+            if (tempSupply >= tempDemand) {
+                tempSubstraction = this.supplyList.get(maxKey.getRow()) - tempDemand;
+                this.supplyList.set(maxKey.getRow(), tempSubstraction);
+                this.demandList.set(maxKey.getCol(), 0.0);
+                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
+            }
+            else {
+                tempSubstraction = this.demandList.get(maxKey.getCol()) - tempSupply;
+                this.supplyList.set(maxKey.getRow(), 0.0);
+                this.demandList.set(maxKey.getCol(), tempSubstraction);
+                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
+            }
+            matrixMap.remove(maxKey);
+        }
 
         System.out.println("\n\nKROK NR 3");
         for (int i = 0; i < helperMatrix.length; i++) {
