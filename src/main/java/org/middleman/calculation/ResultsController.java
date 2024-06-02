@@ -40,8 +40,11 @@ public class ResultsController {
     public static int purchaseCosts; // KZ - koszty zakupu
 
     // zmienne kryterialne
-    public int[] alpha;
-    public int[] beta;
+    public double[] alpha;
+    public double[] beta;
+    public boolean[] alphaVisited;
+    public boolean[] betaVisited;
+
     public double supply = 0;
     public double demand = 0;
 
@@ -50,6 +53,9 @@ public class ResultsController {
     public int numberOfSuppliersWithFictional;
     public int numberOfRecipientsWithFunctional;
     public boolean ozt = false;
+
+    public Map<Pair, Double> deltasMap = new HashMap<>();
+
     @FXML
     void initialize() {
 
@@ -113,6 +119,8 @@ public class ResultsController {
 
         this.calculateZyskiCalkowite();
         this.calculateMaxMatrixElementMethod();
+        this.calculateAlphasBetas();
+        this.calculateDeltas();
 //        if (supply > demand) {
 //            // OZT
 //            for (int i = 0; i < this.numberOfSuppliers; i++) {
@@ -149,8 +157,8 @@ public class ResultsController {
     public void calculateZyskiCalkowite() {
         for (int i = 0; i < this.numberOfSuppliers; i++) {
             for (int j = 0; j < this.numberOfRecipients; j++) {
-                totalRevenueMatrix[i][j] = this.demandListCost.get(j) - (this.supplyListCost.get(i) + this.transportCostsMatrix[i][j]);
-                System.out.print(totalRevenueMatrix[i][j] + " ");
+                this.totalRevenueMatrix[i][j] = this.demandListCost.get(j) - (this.supplyListCost.get(i) + this.transportCostsMatrix[i][j]);
+                System.out.print(this.totalRevenueMatrix[i][j] + " ");
             }
             System.out.println();
         }
@@ -167,9 +175,6 @@ public class ResultsController {
                 else {
                     matrixMap.put(new Pair(i, j), totalRevenueMatrix[i][j]);
                 }
-
-
-
             }
         }
         System.out.println("Suplly all: " + this.supply + ", demand all: " + this.demand);
@@ -203,13 +208,13 @@ public class ResultsController {
                 tempSubstraction = this.supplyList.get(maxKey.getRow()) - tempDemand;
                 this.supplyList.set(maxKey.getRow(), tempSubstraction);
                 this.demandList.set(maxKey.getCol(), 0.0);
-                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
+                this.helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
             }
             else {
                 tempSubstraction = this.demandList.get(maxKey.getCol()) - tempSupply;
                 this.supplyList.set(maxKey.getRow(), 0.0);
                 this.demandList.set(maxKey.getCol(), tempSubstraction);
-                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
+                this.helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
             }
             matrixMap.remove(maxKey);
         }
@@ -237,35 +242,76 @@ public class ResultsController {
                 tempSubstraction = this.supplyList.get(maxKey.getRow()) - tempDemand;
                 this.supplyList.set(maxKey.getRow(), tempSubstraction);
                 this.demandList.set(maxKey.getCol(), 0.0);
-                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
+                this.helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempDemand;
             }
             else {
                 tempSubstraction = this.demandList.get(maxKey.getCol()) - tempSupply;
                 this.supplyList.set(maxKey.getRow(), 0.0);
                 this.demandList.set(maxKey.getCol(), tempSubstraction);
-                helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
+                this.helperMatrix[maxKey.getRow()][maxKey.getCol()] = tempSupply;
             }
             matrixMap.remove(maxKey);
         }
 
         System.out.println("\n\nKROK NR 3");
-        for (int i = 0; i < helperMatrix.length; i++) {
-            for (int j = 0; j < helperMatrix[0].length; j++) {
-                System.out.print(helperMatrix[i][j] + " ");
+        for (int i = 0; i < this.helperMatrix.length; i++) {
+            for (int j = 0; j < this.helperMatrix[0].length; j++) {
+                System.out.print(this.helperMatrix[i][j] + " ");
             }
             System.out.println();
         }
     }
 
     public void calculateAlphasBetas() {
+        this.alpha = new double[this.numberOfSuppliersWithFictional];
+        this.alphaVisited = new boolean[this.numberOfSuppliersWithFictional];
 
+        Arrays.fill(this.alpha, Double.NaN);
+        Arrays.fill(this.beta, Double.NaN);
+
+        this.alpha[0] = 0.0;
+        this.alphaVisited[0] = true;
+        for (int nrRow = 0; nrRow < this.helperMatrix.length; nrRow++) {
+            for (int nrCol = 0; nrCol < this.helperMatrix[nrRow].length; nrCol++) {
+                for (int nrItem = nrRow; nrItem < this.helperMatrix.length; nrItem++) {
+                    if (this.helperMatrix[nrItem][nrCol] != 0.0 && !Double.isNaN(this.helperMatrix[nrItem][nrCol])) {
+                        if (Double.isNaN(alpha[nrItem]) && !Double.isNaN(beta[nrCol])) {
+                            alpha[nrItem] = this.totalRevenueMatrix[nrItem][nrCol] - beta[nrCol];
+                        }
+
+                        if (Double.isNaN(beta[nrCol]) &&  !Double.isNaN(alpha[nrItem])) {
+                            beta[nrCol] = this.totalRevenueMatrix[nrItem][nrCol] - alpha[nrItem];
+                        }
+                    }
+                }
+            }
+        }
+
+        System.out.println("ALFY I BETY");
+        for (int i = 0; i < alpha.length; i++) {
+            System.out.print(alpha[i] + " ");
+        }
+        System.out.println();
+        for (int i = 0; i < beta.length; i++) {
+            System.out.print(beta[i] + " ");
+        }
+        System.out.println();
     }
 
-    public void calculateCriticalVariables() {
-
+    public void calculateDeltas() {
+        System.out.println("LICZENIE DELT");
+        for (int i = 0; i < helperMatrix.length; i++) {
+            for (int j = 0; j < helperMatrix[0].length; j++) {
+                if (helperMatrix[i][j] == 0.0 || Double.isNaN(helperMatrix[i][j])) {
+                    double delta = this.totalRevenueMatrix[i][j] - alpha[i] - beta[j];
+                    System.out.println("Delta: " + "("+ i + "," + j + ")" + " - " + delta);
+                    this.deltasMap.put(new Pair(i, j), delta);
+                }
+            }
+        }
     }
 
-    public void calculateOptimalDeltas() {
+    public void optimize() {
 
     }
 }
