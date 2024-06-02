@@ -2,6 +2,7 @@ package org.middleman.calculation;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class Customer {
     private final boolean isFictional;
     @ToString.Exclude
     private final List<Route> routes = new ArrayList<>();
+    @Setter
+    private Double beta;
 
     public void addRoute(Route route) {
         routes.add(route);
@@ -28,5 +31,17 @@ public class Customer {
         for (var route : routes)
             val -= route.getUnits();
         return val;
+    }
+
+    public void propagateBeta() {
+        for (var route : routes)
+            if (route.getUnits() > 0) {
+                Supplier supplier = route.getSupplier();
+                Double alpha = supplier.getAlpha();
+                if (alpha == null) {
+                    supplier.setAlpha(route.getTotalRevenue() - beta);
+                    supplier.propagateAlpha();
+                }
+            }
     }
 }

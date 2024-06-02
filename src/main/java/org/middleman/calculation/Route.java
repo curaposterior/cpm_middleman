@@ -6,15 +6,15 @@ import lombok.ToString;
 
 @RequiredArgsConstructor
 @ToString
+@Getter
 public class Route {
     private final Supplier supplier;
     private final Customer customer;
     private final double transportCost;
 
-    @Getter
     private double totalRevenue;
-    @Getter
     private double units;
+    private double delta;
 
     public void calculateTotalRevenue() {
         totalRevenue = 0;
@@ -29,6 +29,10 @@ public class Route {
 
     public void assignUnits() {
         units = Math.min(supplier.getCurrentSupply(), customer.getCurrentDemand());
+    }
+
+    public void assignDelta() {
+        delta = units == 0 ? totalRevenue - supplier.getAlpha() - customer.getBeta() : Double.NaN;
     }
 
     public boolean isReal() {

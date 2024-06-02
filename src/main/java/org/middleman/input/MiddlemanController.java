@@ -71,7 +71,7 @@ public class MiddlemanController {
     }
 
     @FXML
-    void onCalculateButtonClick() throws IOException {
+    void onCalculateButtonAction() throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(MiddlemanApplication.class.getResource("results.fxml"));
         Scene scene = new Scene(loader.load());
