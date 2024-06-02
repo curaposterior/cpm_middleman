@@ -3,6 +3,7 @@ module org.cpm {
     requires javafx.fxml;
     requires jdk.jshell;
     requires static lombok;
+    requires java.sql;
 
 
     opens org.cpm to javafx.fxml;

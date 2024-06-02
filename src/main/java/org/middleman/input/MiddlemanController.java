@@ -105,7 +105,7 @@ public class MiddlemanController {
 
         controller.setSuppliers(suppliers);
         controller.setCustomers(customers);
-        controller.setTransportCosts(costs);
+        controller.setTransportCostsMatrix(costs);
         controller.calculate();
 
         stage.setScene(scene);
