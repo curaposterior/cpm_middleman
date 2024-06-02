@@ -83,13 +83,13 @@ public class ResultsController {
 
     public void calculateAlphasBetas() {
         this.alpha = new double[this.numberOfSuppliersWithFictional];
-        this.alphaVisited = new boolean[this.numberOfSuppliersWithFictional];
+        this.beta = new double[this.numberOfRecipientsWithFunctional];
 
         Arrays.fill(this.alpha, Double.NaN);
         Arrays.fill(this.beta, Double.NaN);
 
         this.alpha[0] = 0.0;
-        this.alphaVisited[0] = true;
+
         for (int nrRow = 0; nrRow < this.helperMatrix.length; nrRow++) {
             for (int nrCol = 0; nrCol < this.helperMatrix[nrRow].length; nrCol++) {
                 for (int nrItem = nrRow; nrItem < this.helperMatrix.length; nrItem++) {
@@ -118,7 +118,8 @@ public class ResultsController {
     }
 
     public void calculateDeltas() {
-        System.out.println("LICZENIE DELT");
+        this.deltasMap = new HashMap<>();
+
         for (int i = 0; i < helperMatrix.length; i++) {
             for (int j = 0; j < helperMatrix[0].length; j++) {
                 if (helperMatrix[i][j] == 0.0 || Double.isNaN(helperMatrix[i][j])) {
@@ -130,7 +131,7 @@ public class ResultsController {
         }
     }
 
-    public void optimize() {
+    public void optimizeCosts() {
 
     }
 }
