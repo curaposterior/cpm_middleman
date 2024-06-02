@@ -31,6 +31,10 @@ public class Route {
         units = Math.min(supplier.getCurrentSupply(), customer.getCurrentDemand());
     }
 
+    public void assignUnits(double value) {
+        units += value;
+    }
+
     public void assignDelta() {
         delta = units == 0 ? totalRevenue - supplier.getAlpha() - customer.getBeta() : Double.NaN;
     }

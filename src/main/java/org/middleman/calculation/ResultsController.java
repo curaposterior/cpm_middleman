@@ -51,10 +51,22 @@ public class ResultsController {
 
         calculateTotalRevenues();
         calculateMaxMatrixElementMethod();
-        calculateAlphasBetas();
-        calculateDeltas();
-        for (var route : routes)
-            System.out.println(route);
+
+        while (true) {
+            calculateAlphasBetas();
+            calculateDeltas();
+            boolean flag = false;
+            for (var route : routes) {
+                double delta = route.getDelta();
+                if (!Double.isNaN(delta) && delta > 0) {
+                    flag = true;
+                    break;
+                }
+            }
+            if (!flag)
+                break;
+            optimizeCosts();
+        }
     }
 
     public void calculateTotalRevenues() {
@@ -86,6 +98,11 @@ public class ResultsController {
     }
 
     public void calculateAlphasBetas() {
+        for (var suplier : suppliers)
+            suplier.setAlpha(null);
+        for (var customer : customers)
+            customer.setBeta(null);
+
         for (var supplier : suppliers)
             if (supplier.isFictional()) {
                 supplier.setAlpha(0.);
@@ -99,7 +116,38 @@ public class ResultsController {
     }
 
     public void optimizeCosts() {
+        Route maxDeltaRoute = routes.stream()
+                .filter(route -> !Double.isNaN(route.getDelta()))
+                .sorted(Comparator.comparingDouble(Route::getDelta))
+                .toList()
+                .reversed()
+                .getFirst();
 
+        Supplier supplier1 = maxDeltaRoute.getSupplier();
+        for (var route1 : supplier1.getRoutes()) {
+            if (!Double.isNaN(route1.getDelta())) {
+                Customer customer1 = route1.getCustomer();
+                for (var route2 : customer1.getRoutes()) {
+                    if (route2 == route1)
+                        continue;
+                    Supplier supplier2 = route2.getSupplier();
+                    for (var route3 : supplier2.getRoutes()) {
+                        if (route3 == route2)
+                            continue;
+                        Customer customer2 = route3.getCustomer();
+                        for (var route4 : customer2.getRoutes())
+                            if (route4 == maxDeltaRoute) {
+                                double units = Math.min(route1.getUnits(), route2.getUnits());
+                                units = Math.min(units, route3.getUnits());
+                                maxDeltaRoute.assignUnits(units);
+                                route1.assignUnits(-units);
+                                route2.assignUnits(units);
+                                route3.assignUnits(-units);
+                            }
+                    }
+                }
+            }
+        }
     }
 }
 
