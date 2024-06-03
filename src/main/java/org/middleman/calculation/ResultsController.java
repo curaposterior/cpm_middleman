@@ -18,6 +18,11 @@ public class ResultsController {
 
     private List<Route> routes;
 
+    private double totalTransportationCost = 0.0;
+    private double totalPurchaseCost = 0.0;
+    private double totalRevenue = 0.0;
+    private double totalProfit = 0.0;
+
     @FXML
     GridPane unitProfit;
     @FXML
@@ -77,6 +82,8 @@ public class ResultsController {
                 break;
         }
 
+        calculateFinalVariables();
+
         for (var supplier : suppliers) {
             if (supplier.isFictional())
                 continue;
@@ -101,9 +108,9 @@ public class ResultsController {
             );
         }
 
-        costTextField.setText("");
-        incomeTextField.setText("");
-        profitTextField.setText("");
+        costTextField.setText(String.valueOf(this.totalTransportationCost + this.totalPurchaseCost));
+        incomeTextField.setText(String.valueOf(this.totalRevenue));
+        profitTextField.setText(String.valueOf(this.totalProfit));
     }
 
     public void calculateTotalRevenues() {
@@ -190,6 +197,17 @@ public class ResultsController {
             }
         }
         return false;
+    }
+
+    public void calculateFinalVariables() {
+        for (var route: routes) {
+            if (route.isReal() && route.getUnits() > 0) {
+                this.totalProfit += (route.getUnits()*route.getTotalRevenue());
+                this.totalTransportationCost += (route.getUnits()*route.getTransportCost());
+                this.totalPurchaseCost += (route.getUnits()*route.getSupplier().getCost());
+                this.totalRevenue += (route.getUnits()*route.getCustomer().getPrice());
+            }
+        }
     }
 }
 
