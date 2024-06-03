@@ -35,7 +35,7 @@
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
          </padding>
          <children>
-            <Button minWidth="38.0" mnemonicParsing="false" onMouseClicked="#onAddSupplierButtonClick" text="Add" />
+            <Button minWidth="38.0" mnemonicParsing="false" onAction="#onAddSupplierButtonAction" text="Add" />
          </children>
       </HBox>
       <HBox fx:id="customersInputFields" alignment="CENTER" spacing="10.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
@@ -43,7 +43,7 @@
             <Insets bottom="10.0" left="5.0" right="5.0" top="10.0" />
          </padding>
          <children>
-            <Button minWidth="38.0" mnemonicParsing="false" onMouseClicked="#onAddCustomerButtonClick" text="Add" />
+            <Button minWidth="38.0" mnemonicParsing="false" onAction="#onAddCustomerButtonAction" text="Add" />
          </children>
       </HBox>
       <GridPane fx:id="transportCosts" alignment="CENTER" GridPane.columnSpan="2" GridPane.rowIndex="2">
@@ -53,7 +53,7 @@
          <columnConstraints>
             <ColumnConstraints minWidth="10.0" />
          </columnConstraints></GridPane>
-      <Button mnemonicParsing="false" onMouseClicked="#onCalculateButtonClick" text="Calculate" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
+      <Button mnemonicParsing="false" onMouseClicked="#onCalculateButtonAction" text="Calculate" GridPane.columnSpan="2" GridPane.halignment="CENTER" GridPane.rowIndex="3" />
    </children>
    <padding>
       <Insets bottom="20.0" left="10.0" right="10.0" top="20.0" />

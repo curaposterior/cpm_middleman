@@ -4,12 +4,9 @@ import javafx.beans.property.StringProperty;
 import javafx.collections.ListChangeListener;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.Label;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
@@ -36,6 +33,7 @@ public class MiddlemanController {
     HBox customersInputFields;
     @FXML
     GridPane transportCosts;
+    public static final int nameLengthConstant = 19;
 
     @FXML
     void initialize() {
@@ -73,10 +71,15 @@ public class MiddlemanController {
     }
 
     @FXML
-    void onCalculateButtonClick() throws IOException {
+    void onCalculateButtonAction() throws IOException {
         Stage stage = new Stage();
         FXMLLoader loader = new FXMLLoader(MiddlemanApplication.class.getResource("results.fxml"));
         Scene scene = new Scene(loader.load());
+        stage.setScene(scene);
+        stage.setTitle("Results");
+        stage.sizeToScene();
+        stage.centerOnScreen();
+        stage.show();
         var controller = (ResultsController) loader.getController();
 
         List<Supplier> suppliers = new ArrayList<>();
@@ -85,7 +88,7 @@ public class MiddlemanController {
             supIndexes.put(sup.getGridIndex(), suppliers.size());
             double supply = Double.parseDouble(sup.getSupply());
             double cost = Double.parseDouble(sup.getCost());
-            suppliers.add(new Supplier(sup.getName(), supply, cost));
+            suppliers.add(new Supplier(sup.getName(), supply, cost, false));
         }
 
         List<Customer> customers = new ArrayList<>();
@@ -94,7 +97,7 @@ public class MiddlemanController {
             cusIndexes.put(cus.getGridIndex(), customers.size());
             double demand = Double.parseDouble(cus.getDemand());
             double price = Double.parseDouble(cus.getPrice());
-            customers.add(new Customer(cus.getName(), demand, price));
+            customers.add(new Customer(cus.getName(), demand, price, false));
         }
 
         double[][] costs = new double[suppliers.size() + 1][customers.size() + 1];
@@ -107,18 +110,12 @@ public class MiddlemanController {
 
         controller.setSuppliers(suppliers);
         controller.setCustomers(customers);
-        controller.setTransportCosts(costs);
+        controller.setTransportCostsMatrix(costs);
         controller.calculate();
-
-        stage.setScene(scene);
-        stage.setTitle("Results");
-        stage.sizeToScene();
-        stage.centerOnScreen();
-        stage.show();
     }
 
     @FXML
-    void onAddSupplierButtonClick() {
+    void onAddSupplierButtonAction() {
         StringProperty name = null;
         StringProperty supply = null;
         StringProperty cost = null;
@@ -138,6 +135,13 @@ public class MiddlemanController {
             AlertProducer.alert(Alert.AlertType.INFORMATION,
                     "Information",
                     "Input name",
+                    "");
+            return;
+        }
+        if (name.get().length() > nameLengthConstant) {
+            AlertProducer.alert(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Name is too long",
                     "");
             return;
         }
@@ -185,7 +189,7 @@ public class MiddlemanController {
 
 
     @FXML
-    void onAddCustomerButtonClick() {
+    void onAddCustomerButtonAction() {
         StringProperty name = null;
         StringProperty demand = null;
         StringProperty price = null;
@@ -205,6 +209,13 @@ public class MiddlemanController {
             AlertProducer.alert(Alert.AlertType.INFORMATION,
                     "Information",
                     "Input name",
+                    "");
+            return;
+        }
+        if (name.get().length() > nameLengthConstant) {
+            AlertProducer.alert(Alert.AlertType.INFORMATION,
+                    "Information",
+                    "Name is too long",
                     "");
             return;
         }

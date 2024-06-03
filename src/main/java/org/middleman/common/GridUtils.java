@@ -21,6 +21,12 @@ public class GridUtils {
                 text = String.valueOf(values[i-1]);
             var field = new TextField(text);
             field.setMaxWidth(80);
+            field.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue.matches("^[0-9]*\\.?[0-9]*$"))
+                    field.setText(newValue);
+                else
+                    field.setText(oldValue);
+            });
             GridPane.setMargin(field, new Insets(5));
             grid.add(field, i, row);
         }
@@ -37,6 +43,12 @@ public class GridUtils {
                 text = String.valueOf(values[i-1]);
             var field = new TextField(text);
             field.setMaxWidth(80);
+            field.textProperty().addListener((observableValue, oldValue, newValue) -> {
+                if (newValue.matches("^[0-9]*\\.?[0-9]*$"))
+                    field.setText(newValue);
+                else
+                    field.setText(oldValue);
+            });
             GridPane.setMargin(field, new Insets(5));
             grid.add(field, col, i);
         }
