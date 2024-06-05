@@ -1,20 +1,39 @@
 ####  **Projekt realizowany w ramach przedmiotu Badania Operacyjne i Logistyka**
 
----
-## **Technologie:**
+# CPM i Zagadnienie pośrednika
 
-- ### `Java`
+Repozytorium zawiera dwie aplikacje napisane w JavaFX rozwiązujące problem:
+- Zagadnienie pośrednika (zbilansowane i niezbilansowane)
+- Critical Path Method (wyznaczenie ścieżki krytycznej)
 
-- ### `JavaFX`
+## Uruchomienie aplikacji
 
-- ### `Dodatkowe biblioteki`
+### Dependencies
 
----
+Lista zależności znajduje się w pliku `pom.xml`.
+
+### Launch the apps
+
+Aby uruchomić GUI z zagadnieniem pośrednika należy uruchomić plik `MiddlemanApplication.java`
+
+![img_1.png](img/img_1.png)
+
+Aby uruchomić GUI z CPM należy uruchomić plik `CPMApplication.java`
+
+![img.png](img/img.png)
+
+## Built With
+
+- [JavaFX](https://openjfx.io/)
+- [Lombok](https://projectlombok.org/)
+
+## Authors
+
+- [jeremi1111111](https://github.com/jeremi1111111)
+- [curaposterior](https://github.com/curaposterior)
+- [MaksKubiczek](https://github.com/MaksKubiczek)
 
 
-- ### [Maksymilian Kubiczek](https://github.com/MaksKubiczek) - `Back-end`
+## License
 
-- ### [Jan Krzanowski](https://github.com/curaposterior) - `Team Leader`, `Back-end`, `Devops`
-
-- ### [Jarosław Struzik](https://github.com/jeremi1111111)  - `Java Developer`, `Full-stack`
----
+This project is licensed under the [MIT License](LICENSE)
