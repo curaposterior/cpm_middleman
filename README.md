@@ -29,12 +29,9 @@ Aby uruchomić GUI z CPM należy uruchomić plik `CPMApplication.java`
 
 ## Authors
 
-- **jeremi1111111** -
-  [github](https://github.com/jeremi1111111)
-- **curaposterior** - 
-  [github](https://github.com/curaposterior)
-- **MaksKubiczek** - 
-  [github](https://github.com/MaksKubiczek)
+- [jeremi1111111](https://github.com/jeremi1111111)
+- [curaposterior](https://github.com/curaposterior)
+- [MaksKubiczek](https://github.com/MaksKubiczek)
 
 
 ## License
